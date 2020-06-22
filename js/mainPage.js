@@ -8,7 +8,6 @@ class mainPageControl
     
     constructor(bonsaiModel, bonsaiView)
     {
-        
         this.bonsaiModel=bonsaiModel;
         this.bonsaiView=bonsaiView;
 
@@ -16,6 +15,7 @@ class mainPageControl
         this.growCycle=3000;
     }
 
+    //Restructure these, singleton might not be the best way of doing this.
     newDay()
     {
         controller.bonsaiModel.newDay();
@@ -35,20 +35,22 @@ class mainPageControl
 
 class bonsaiModel
 {
-    constructor()
+    constructor(observer)
     {
+        this.bonsaiObserver=observer;
+        this.currentStateMap=["alive","dying","dead"];
         this.daysSinceWatered=0;
         this.currentDay=0;
+        
     }
 
     newDay()
     {
+        var currState=this.currentStateMap[this.daysSinceWatered];
+        this.bonsaiObserver.update(currState);
         this.currentDay++;
         this.daysSinceWatered++;
-
-    
-
-        //TODO change bonsai state based on watering.
+        
     }
 
     waterPlant()
@@ -59,21 +61,15 @@ class bonsaiModel
 }
 
 
-class bonsaiTile
-{
-    constructor()
-    {
-        
-    }
-}
+
 
 class bonsaiView
 {
     constructor()
     {
-        this.tileStateColorMap={"unused":"white","trunk":"brown","leaves":"green","dead":"black"};
+        this.tileStateColorMap={"alive":"green","dying":"brown","dead":"black"};
         this.colorIndexMap={"white":0, "brown":1, "green":2,"black":3};
-        this.currentState="leaves";
+        this.currentState="alive";
         this.init();
     }
 
@@ -109,6 +105,12 @@ class bonsaiView
 
     }
 
+    update(state)
+    {
+        this.currentState=state;
+        this.displayBonsai();
+    }
+
     displayBonsai()
     {
         //Colored squares implementation for prototyping only. Will be changed later.
@@ -125,7 +127,9 @@ function grow()
 
 function loadPage()
 {
-    controller=new mainPageControl(new bonsaiModel(), new bonsaiView());
+    var view= new bonsaiView();
+    var model= new bonsaiModel(view);
+    controller=new mainPageControl(model,view);
     var newDay=document.getElementById("newDay");
     var waterPlant=document.getElementById("waterPlant");
     newDay.onclick=controller.newDay;
