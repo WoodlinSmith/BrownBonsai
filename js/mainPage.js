@@ -28,6 +28,11 @@ class mainPageControl
         console.log("Watered Plant!");
     }
 
+    grow()
+    {
+        controller.bonsaiModel.grow();
+    }
+
     
 }
 
@@ -41,12 +46,21 @@ class bonsaiModel
         this.currentStateMap=["alive","dying","dead"];
         this.daysSinceWatered=0;
         this.currentDay=0;
+        this.size=20;
         
     }
 
     newDay()
     {
         var currState=this.currentStateMap[this.daysSinceWatered];
+        let growCheck= (Math.random())%100;
+
+        if(this.daysSinceWatered==0&&growCheck>90)
+        {
+            grow();
+            this.bonsaiObserver.sizeChange(this.size);
+        }
+
         this.bonsaiObserver.update(currState);
         this.currentDay++;
         this.daysSinceWatered++;
@@ -56,6 +70,12 @@ class bonsaiModel
     waterPlant()
     {
         this.daysSinceWatered=0;
+    }
+
+    //Implementation will change later once the squares prototyping is removed.
+    grow()
+    {
+        this.size+=1;
     }
 
 }
@@ -73,28 +93,6 @@ class bonsaiView
         this.init();
     }
 
-    /*
-    generateBonsaiGrid()
-    {
-        var i=0;
-        var grid = document.createElement('table');
-        grid.className = 'grid';
-        for (var r=0;r<rows;++r){
-          var tr = grid.appendChild(document.createElement('tr'));
-          for (var c=0;c<cols;++c){
-            var cell = tr.appendChild(document.createElement('td'));
-            cell.className="gridCell";
-            cell.innerHTML = ++i;
-            /*
-            cell.addEventListener('growTime',(function(){
-              
-             })(cell,r,c,i),false);
-          }
-          
-        }
-        return grid;
-    }
-    */
 
     init()
     {
@@ -109,6 +107,14 @@ class bonsaiView
     {
         this.currentState=state;
         this.displayBonsai();
+    }
+    
+    sizeChange(size)
+    {
+        var bonsai=document.getElementById("bonsai");
+        bonsai.style.height=size;
+        bonsai.style.width=size;
+
     }
 
     displayBonsai()
