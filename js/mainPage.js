@@ -28,6 +28,12 @@ class mainPageControl
         console.log("Watered Plant!");
     }
 
+    trim()
+    {
+        controller.bonsaiModel.trim();
+        console.log("Trimmed!");
+    }
+
     grow()
     {
         controller.bonsaiModel.grow();
@@ -47,7 +53,8 @@ class bonsaiModel
         this.daysSinceWatered=0;
         this.currentDay=0;
         this.size=20;
-        
+        this.beauty=100;
+        this.overGrown=false;    
     }
 
     newDay()
@@ -61,6 +68,10 @@ class bonsaiModel
             this.bonsaiObserver.sizeChange(this.size);
         }
 
+        if(this.overGrown)
+        {
+            this.beauty-=10;
+        }
         this.bonsaiObserver.update(currState);
         this.currentDay++;
         this.daysSinceWatered++;
@@ -76,6 +87,17 @@ class bonsaiModel
     grow()
     {
         this.size+=1;
+        let overGrowCheck=Math.random()%100;
+        if(overGrowCheck>95)
+        {
+            this.overGrown=true;
+        }
+    }
+
+    trim()
+    {
+        this.overGrown=false;
+        this.beauty+=10;
     }
 
 }
