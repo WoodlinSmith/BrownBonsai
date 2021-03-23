@@ -1,4 +1,8 @@
 import React, { useState} from 'react';
+import "./tailwind.css"
+import live from "./asset/alive.png"
+import dying from "./asset/dying.png"
+import dead from "./asset/dead.png"
 interface IProps {
 
 }
@@ -21,7 +25,7 @@ class Bonsai extends React.Component< IProps, IState> {
     componentDidMount() : void {
         this.setState({timer:setInterval(
             () => this.newDay(),
-            10000
+            100
         )}
         );
     }
@@ -43,7 +47,8 @@ class Bonsai extends React.Component< IProps, IState> {
 
     waterDamage() : number {
         if(this.state.water<50){
-            return this.state.water/10;
+            //Placeholder val
+            return 1;
         }
         return 0;
     }
@@ -51,4 +56,22 @@ class Bonsai extends React.Component< IProps, IState> {
     grow() : void {
 
     }
+
+    render() {
+        return (
+            <div>
+                {this.state.health>50 && 
+                    <img src={live}></img>
+                }
+                {this.state.health<=50 &&
+                    <img src={dying}></img>
+                }
+                {this.state.dead &&
+                    <img src={dead}></img>
+                }
+            </div>
+        )
+    }
 }
+
+export default Bonsai;
