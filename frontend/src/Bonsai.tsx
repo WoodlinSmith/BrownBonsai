@@ -20,12 +20,13 @@ class Bonsai extends React.Component< IProps, IState> {
         super(props)
         //simple stats for now
         this.state={health:100, dead:false, water:100, timer:null}
-    }
+
+  }
 
     componentDidMount() : void {
         this.setState({timer:setInterval(
             () => this.newDay(),
-            100
+            1000
         )}
         );
     }
@@ -35,10 +36,18 @@ class Bonsai extends React.Component< IProps, IState> {
     newDay() : void {
         //Necromancy does not exist in the bonsai world, if we're dead, we're dead!
         if(!this.state.dead){
-            this.setState({health:this.state.health-this.waterDamage()})
-            this.setState({water:this.state.water-10})
+            if(this.state.health>0){
+                this.setState({health:this.state.health-this.waterDamage()});
+            }
+            if(this.state.health<100){
+                this.setState({health:this.state.health+this.grow()});
+            }
+
+            if(this.state.water>0){
+                this.setState({water:this.state.water-10});
+            }
             if(this.state.health==0){
-                this.setState({dead:true})
+                this.setState({dead:true});
             }
             
         }
@@ -53,22 +62,41 @@ class Bonsai extends React.Component< IProps, IState> {
         return 0;
     }
 
-    grow() : void {
+    grow() : number {
+        if(this.state.water>=50){
+            return 1;
+        }
+        return 0;
 
+    }
+    water() : void {
+        if(this.state.water<=90){
+            this.setState({water:this.state.water+10});
+        }
+
+        //Just top it off if we're over 90%
+        //May add overwatering later.
+        else {
+            this.setState({water:100});
+        }
+        console.log(this.state.water);
     }
 
     render() {
         return (
             <div>
-                {this.state.health>50 && 
-                    <img src={live}></img>
-                }
-                {this.state.health<=50 &&
-                    <img src={dying}></img>
-                }
-                {this.state.dead &&
-                    <img src={dead}></img>
-                }
+                <div className="bg-white flex mx-auto flex-shrink-6 w-40 h-40">
+                    {this.state.health>50 && 
+                        <img src={live}></img>
+                    }
+                    {this.state.health<=50 && this.state.health>0 &&
+                        <img src={dying}></img>
+                    }
+                    {this.state.dead &&
+                        <img src={dead}></img>
+                    }
+                </div>
+                <button className="bg-black flex text-white font-large shadow-md mx-auto" onClick={this.water.bind(this)}>Water your tree!</button>
             </div>
         )
     }
