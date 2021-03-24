@@ -3,6 +3,7 @@ import "./tailwind.css"
 import live from "./asset/alive.png"
 import dying from "./asset/dying.png"
 import dead from "./asset/dead.png"
+import StatBar from "./StatBar"
 interface IProps {
 
 }
@@ -14,7 +15,7 @@ interface IState{
     timer: NodeJS.Timeout|null
 }
 
-class Bonsai extends React.Component< IProps, IState> {
+class Bonsai extends React.Component<IProps, IState> {
  
     constructor(props:any){
         super(props)
@@ -31,10 +32,18 @@ class Bonsai extends React.Component< IProps, IState> {
         );
     }
 
+    getHealth(){
+        return this.state.health;
+    }
+    getWater(){
+        return this.state.water;
+    }
+
 
 
     newDay() : void {
         //Necromancy does not exist in the bonsai world, if we're dead, we're dead!
+        this.forceUpdate();
         if(!this.state.dead){
             if(this.state.health>0){
                 this.setState({health:this.state.health-this.waterDamage()});
@@ -49,7 +58,7 @@ class Bonsai extends React.Component< IProps, IState> {
             if(this.state.health==0){
                 this.setState({dead:true});
             }
-            
+        
         }
 
     }
@@ -80,11 +89,12 @@ class Bonsai extends React.Component< IProps, IState> {
             this.setState({water:100});
         }
         console.log(this.state.water);
+        this.forceUpdate();
     }
 
     render() {
         return (
-            <div>
+            <div className="mx-auto w-100 h-100">
                 <div className="bg-white flex mx-auto flex-shrink-6 w-40 h-40">
                     {this.state.health>50 && 
                         <img src={live}></img>
@@ -95,8 +105,11 @@ class Bonsai extends React.Component< IProps, IState> {
                     {this.state.dead &&
                         <img src={dead}></img>
                     }
+                    
                 </div>
-                <button className="bg-black flex text-white font-large shadow-md mx-auto" onClick={this.water.bind(this)}>Water your tree!</button>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={this.water.bind(this)}>Water your tree!</button>
+                <StatBar bgcolor="red" completion={this.state.health} getCompletion={this.getHealth}></StatBar>
+                <StatBar bgcolor="blue" completion={this.state.water} getCompletion={this.getWater}></StatBar>
             </div>
         )
     }
