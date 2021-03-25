@@ -32,14 +32,6 @@ class Bonsai extends React.Component<IProps, IState> {
         );
     }
 
-    getHealth(){
-        return this.state.health;
-    }
-    getWater(){
-        return this.state.water;
-    }
-
-
 
     newDay() : void {
         //Necromancy does not exist in the bonsai world, if we're dead, we're dead!
@@ -108,8 +100,8 @@ class Bonsai extends React.Component<IProps, IState> {
                     
                 </div>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={this.water.bind(this)}>Water your tree!</button>
-                <StatBar bgcolor="red" completion={this.state.health} getCompletion={this.getHealth}></StatBar>
-                <StatBar bgcolor="blue" completion={this.state.water} getCompletion={this.getWater}></StatBar>
+                <StatBar bgcolor="red" completion={this.state.health}></StatBar>
+                <StatBar bgcolor="blue" completion={this.state.water}></StatBar>
             </div>
         )
     }

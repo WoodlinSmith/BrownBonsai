@@ -3,36 +3,19 @@ import React from 'react';
 interface IProps{
     bgcolor: string;
     completion: number;
-    getCompletion: Function;
-}
-interface IState{
-    timer: NodeJS.Timeout|null
-    count: number
-    width: number
 }
 
 
 
-class StatBar extends React.Component<IProps, IState>{
+
+class StatBar extends React.Component<IProps>{
     constructor(props:any){
         super(props)
-        this.state={timer:null, count:0, width:this.props.completion}
-       
-    }
-    componentDidMount() {
-        this.setState({timer:setInterval(
-            () => this.increment(),
-            1000
-        )}
-        );
-    }
-    increment() {
-        this.setState({count:this.state.count+1})
     }
 
     
     render(){
-      var  containerStyles = {
+      let  containerStyles = {
             height: 20,
             width: '100%',
             backgroundColor: "#e0e0de",
@@ -40,7 +23,7 @@ class StatBar extends React.Component<IProps, IState>{
             margin: 50
           }
         
-      var  fillerStyles = {
+      let  fillerStyles = {
             height: '100%',
             width: `${this.props.completion}%`,
             backgroundColor: this.props.bgcolor,
@@ -49,7 +32,7 @@ class StatBar extends React.Component<IProps, IState>{
             transition: 'width 1s ease-in-out',
           }
         
-      var  labelStyles = {
+      let  labelStyles = {
             padding: 5,
             color: 'white',
             fontWeight: 'bold' as 'bold'
