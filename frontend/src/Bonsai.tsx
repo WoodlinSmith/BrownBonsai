@@ -13,6 +13,7 @@ interface IState{
     dead: boolean
     water: number
     timer: NodeJS.Timeout|null
+    stateString: string
 }
 
 class Bonsai extends React.Component<IProps, IState> {
@@ -20,7 +21,7 @@ class Bonsai extends React.Component<IProps, IState> {
     constructor(props:any){
         super(props)
         //simple stats for now
-        this.state={health:100, dead:false, water:100, timer:null}
+        this.state={health:100, dead:false, water:100, timer:null,stateString:""}
 
   }
 
@@ -84,6 +85,24 @@ class Bonsai extends React.Component<IProps, IState> {
         this.forceUpdate();
     }
 
+    //save state as a JSON string
+    saveState() : void {
+
+        var treeStats ={
+            health: this.state.health,
+            water: this.state.water,
+            dead: this.state.dead
+        }
+        this.setState({stateString:JSON.stringify(treeStats)});
+        window.alert("Bonsai Tree state saved!");
+    }
+
+    loadState(): void{
+        var savedState=JSON.parse(this.state.stateString);
+        this.setState({health:savedState.health, dead:savedState.dead, water:savedState.water});
+        window.alert("Bonsai Tree state loaded!");
+    }
+
     render() {
         return (
             <div className="mx-auto w-100 h-100">
@@ -102,6 +121,8 @@ class Bonsai extends React.Component<IProps, IState> {
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={this.water.bind(this)}>Water your tree!</button>
                 <StatBar bgcolor="red" completion={this.state.health}></StatBar>
                 <StatBar bgcolor="blue" completion={this.state.water}></StatBar>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={this.saveState.bind(this)}>Save State</button>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={this.loadState.bind(this)}>Load State</button>
             </div>
         )
     }
